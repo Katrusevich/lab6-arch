@@ -1,0 +1,20 @@
+# CI (умова 3): при кожному push GitHub сам ставить залежності, запускає юніт-тести
+# і перевіряє, що Docker-образ збирається.
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run unit tests
+        run: pytest -v
+      - name: Build Docker image
+        run: docker build -t lab6-server .
